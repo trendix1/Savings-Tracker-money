@@ -1,4 +1,4 @@
-# Toples Nabung 🐷
+# Toples Nabung 
 
 Website pencatat tabungan: tentukan barang yang ingin dibeli, atur penghasilan & pengeluaranmu, lalu lacak progresnya lewat kalender harian/bulanan. Tanpa server, tanpa database — semua data tersimpan di browser kamu sendiri (localStorage), dan siap di-deploy langsung ke Vercel.
 
