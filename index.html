@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Toples Nabung</title>
+<meta name="description" content="Catat tabungan untuk barang impianmu, lacak penghasilan & pengeluaran, dan pantau progresnya lewat kalender." />
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:wght@500;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/style.css" />
+</head>
+<body data-theme="light">
+<div class="app-shell">
+
+  <header class="topbar">
+    <div class="brand">
+      <div class="brand-mark">🐷</div>
+      <div class="brand-name" id="appTitle">Toples Nabung</div>
+    </div>
+    <div class="topbar-actions">
+      <button class="icon-btn" id="btnSettings" type="button" aria-label="Settings" title="Settings">⚙️</button>
+    </div>
+  </header>
+
+  <!-- ======================= VIEW: HOME ======================= -->
+  <section class="view is-active" id="view-home">
+    <p class="tagline" id="txtTagline">Menabung dengan rencana, bukan cuma angan-angan.</p>
+
+    <button class="add-goal-card" id="btnAddGoal" type="button">
+      <span id="txtAddGoalBtn">+ Tambahkan Tabungan</span>
+    </button>
+
+    <div id="emptyState" class="empty-state" hidden>
+      <div class="empty-state-emoji">🐷</div>
+      <div class="empty-state-title" id="txtNoSavingsYet">Belum ada tabungan</div>
+      <div id="txtNoSavingsDesc">Mulai tabungan pertamamu dan lihat koinnya bertambah.</div>
+    </div>
+
+    <div class="goal-grid" id="goalGrid"></div>
+  </section>
+
+  <!-- ======================= VIEW: FORM (Tambah Tabungan) ======================= -->
+  <section class="view" id="view-form">
+    <div class="view-header">
+      <button class="icon-btn" id="btnFormBack" type="button" aria-label="Back">←</button>
+      <div class="view-title" id="txtNewSavings">Tabungan Baru</div>
+    </div>
+
+    <div class="form-error" id="formError"></div>
+
+    <div class="card">
+      <div class="field">
+        <label class="field-label" id="lblSavingsName">Nama tabungan</label>
+        <input type="text" class="input" id="inputGoalName" placeholder="contoh: HP Baru" />
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-title" id="lblItems">Barang</div>
+      <div id="itemRows"></div>
+      <button class="add-row-btn" id="btnAddItem" type="button">+ Tambah barang</button>
+      <div class="total-row">
+        <span class="total-label" id="lblTotal">Total</span>
+        <span class="total-value" id="formTotal">0</span>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-title" id="lblIncomeSection">Penghasilan</div>
+      <div class="field">
+        <label class="field-label" id="lblIncomeType">Penghasilanmu didapat setiap?</label>
+        <div class="segmented" id="incomeTypeToggle">
+          <button type="button" class="is-active" data-income-type="daily" id="btnIncomeDaily">Harian</button>
+          <button type="button" data-income-type="monthly" id="btnIncomeMonthly">Bulanan</button>
+        </div>
+      </div>
+
+      <div id="dailyIncomeBlock">
+        <div class="field-hint" id="lblDailyIncomeNote">Opsional — isi hanya di hari kamu biasanya mendapat penghasilan.</div>
+        <div class="day-income-grid" id="dayIncomeGrid"></div>
+      </div>
+
+      <div id="monthlyIncomeBlock" style="display:none;">
+        <div class="field">
+          <label class="field-label" id="lblMonthlyIncome">Penghasilan per bulan</label>
+          <input type="number" min="0" class="input" id="inputMonthlyIncome" placeholder="0" />
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-title" id="lblExpenseSection">Pengeluaran</div>
+      <div class="field">
+        <label class="field-label" id="lblExpense">Pengeluaran per hari</label>
+        <input type="number" min="0" class="input" id="inputExpense" placeholder="0" />
+      </div>
+    </div>
+
+    <button class="btn btn-primary" id="btnConfirmGoal" type="button">Konfirmasi</button>
+  </section>
+
+  <!-- ======================= VIEW: DETAIL (Kalender) ======================= -->
+  <section class="view" id="view-detail">
+    <div class="view-header">
+      <button class="icon-btn" id="btnDetailBack" type="button" aria-label="Back">←</button>
+      <div class="view-title" id="detailGoalName">Tabungan</div>
+    </div>
+
+    <div class="detail-hero">
+      <div class="detail-hero-name" id="detailHeroName"></div>
+      <div class="detail-hero-stats">
+        <div>
+          <div class="hero-stat-label" id="lblTargetAmount">Target</div>
+          <div class="hero-stat-value" id="detailTarget">0</div>
+        </div>
+        <div>
+          <div class="hero-stat-label" id="lblSavedAmount">Terkumpul</div>
+          <div class="hero-stat-value" id="detailSaved">0</div>
+        </div>
+        <div>
+          <div class="hero-stat-label" id="lblProjected">hari lagi</div>
+          <div class="hero-stat-value" id="detailProjected">0</div>
+        </div>
+      </div>
+      <div class="jar-bar"><div class="jar-bar-fill" id="jarFill" style="width:0%"></div></div>
+      <div class="jar-caption" id="jarCaption"></div>
+    </div>
+
+    <div class="card calendar-card">
+      <div class="calendar-card-title" id="calendarTitle">Check-in harian</div>
+      <div class="calendar-card-sub" id="calendarSub"></div>
+      <div id="calendarContainer"></div>
+      <div class="legend">
+        <span><span class="legend-dot" style="background:var(--accent-soft);border:1px solid var(--accent)"></span><span id="legendReceived">Dapat</span></span>
+        <span><span class="legend-dot" style="background:var(--danger-soft);border:1px solid var(--danger)"></span><span id="legendMissed">Tidak hari ini</span></span>
+        <span><span class="legend-dot" style="background:var(--primary-soft);border:1px solid var(--primary)"></span><span id="legendToday">Hari ini</span></span>
+      </div>
+    </div>
+  </section>
+
+  <footer class="app-footer">Toples Nabung — dibuat untuk membantu kamu menabung dengan rencana.</footer>
+</div>
+
+<!-- ======================= MODAL: Konfirmasi Periode ======================= -->
+<div class="modal-overlay" id="modalPeriod">
+  <div class="modal">
+    <button class="modal-close-x" id="btnClosePeriodModal" type="button" aria-label="Close">✕</button>
+    <div class="modal-title" id="periodModalQuestion">Apakah kamu mendapat penghasilan di hari ini?</div>
+    <div class="modal-sub" id="periodModalDate"></div>
+    <div class="choice-row">
+      <button class="choice-btn choice-no" id="btnChoiceNo" type="button">
+        <span class="choice-icon">✕</span>
+        <span id="lblMarkMissed">Tidak hari ini</span>
+      </button>
+      <button class="choice-btn choice-yes" id="btnChoiceYes" type="button">
+        <span class="choice-icon">✓</span>
+        <span id="lblMarkReceived">Dapat</span>
+      </button>
+    </div>
+    <div class="amount-entry" id="amountEntryBlock">
+      <div class="field">
+        <label class="field-label" id="lblEnterAmountTitle">Berapa yang masuk?</label>
+        <input type="number" min="0" class="input" id="inputPeriodAmount" placeholder="0" />
+      </div>
+      <button class="btn btn-primary" id="btnSavePeriodAmount" type="button">Simpan</button>
+    </div>
+  </div>
+</div>
+
+<!-- ======================= MODAL: Selamat ======================= -->
+<div class="modal-overlay" id="modalCongrats">
+  <div class="modal congrats-modal">
+    <div class="congrats-emoji">🎉</div>
+    <div class="modal-title" id="congratsTitle">Target tercapai!</div>
+    <div class="modal-sub" id="congratsMessage"></div>
+    <button class="btn btn-primary" id="btnCloseCongrats" type="button">Asyik!</button>
+  </div>
+</div>
+
+<!-- ======================= MODAL: Hapus Tabungan ======================= -->
+<div class="modal-overlay" id="modalDelete">
+  <div class="modal">
+    <div class="modal-title" id="lblDeleteSavings">Hapus tabungan</div>
+    <div class="modal-sub" id="lblDeleteSavingsConfirm">Hapus tabungan ini? Tindakan ini tidak bisa dibatalkan.</div>
+    <div class="modal-actions">
+      <button class="btn btn-ghost btn-block" id="btnCancelDelete" type="button">Batal</button>
+      <button class="btn btn-danger btn-block" id="btnConfirmDelete" type="button">Hapus</button>
+    </div>
+  </div>
+</div>
+
+<!-- ======================= MODAL: Pengaturan ======================= -->
+<div class="modal-overlay" id="modalSettings">
+  <div class="modal">
+    <button class="modal-close-x" id="btnCloseSettings" type="button" aria-label="Close">✕</button>
+    <div class="modal-title" id="lblSettingsTitle">Pengaturan</div>
+
+    <div class="settings-block">
+      <div class="settings-block-title" id="lblAppearance">Tampilan</div>
+      <div class="segmented" id="themeToggle">
+        <button type="button" data-theme-choice="light" id="btnThemeLight">☀️ Terang</button>
+        <button type="button" data-theme-choice="dark" id="btnThemeDark">🌙 Gelap</button>
+      </div>
+    </div>
+
+    <div class="settings-block">
+      <div class="settings-block-title" id="lblLanguageTitle">Bahasa</div>
+      <input type="text" class="input lang-search" id="langSearch" placeholder="Cari bahasa" />
+      <div class="lang-list" id="langList"></div>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script src="js/languages.js"></script>
+<script src="js/i18n.js"></script>
+<script src="js/storage.js"></script>
+<script src="js/calendar.js"></script>
+<script src="js/app.js"></script>
+</body>
+</html>
